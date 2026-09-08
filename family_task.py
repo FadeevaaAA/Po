@@ -1,8 +1,4 @@
 class DateTime:
-    """
-    Самодельный класс для хранения даты и времени без использования библиотек.
-    Поля: year, month, day, hour, minute.
-    """
     def __init__(self, year: int, month: int, day: int,
                  hour: int = 0, minute: int = 0):
         self.year = year
@@ -12,39 +8,23 @@ class DateTime:
         self.minute = minute
 
     def to_minutes(self) -> int:
-        """
-        Переводит дату и время в общее количество минут от условного начала.
-        Используется для сравнения дат при сортировке.
-        Приближение: 365 дней в году, 30 дней в месяце.
-        Для учебной задачи этого достаточно.
-        """
         total_days = self.year * 365 + self.month * 30 + self.day
         total_minutes = total_days * 24 * 60 + self.hour * 60 + self.minute
         return total_minutes
 
     def days_until(self, other: 'DateTime') -> int:
-        """
-        Возвращает примерную разницу в днях: other - self.
-        Используется для фильтрации «за последние N дней».
-        """
         return (other.to_minutes() - self.to_minutes()) // (24 * 60)
 
     def format(self) -> str:
-        """Форматирует дату в строку ДД.ММ.ГГГГ ЧЧ:ММ."""
         return (f"{self.day:02d}.{self.month:02d}.{self.year} "
                 f"{self.hour:02d}:{self.minute:02d}")
 
     def to_iso(self) -> str:
-        """Форматирует дату в строку ISO для сохранения в файл."""
         return (f"{self.year:04d}-{self.month:02d}-{self.day:02d}T"
                 f"{self.hour:02d}:{self.minute:02d}")
 
     @staticmethod
     def from_iso(iso_str: str) -> 'DateTime':
-        """
-        Создаёт DateTime из строки формата YYYY-MM-DDTHH:MM.
-        Выбрасывает Exception при ошибке.
-        """
         try:
             date_part, time_part = iso_str.split('T')
             year, month, day = date_part.split('-')
@@ -56,10 +36,6 @@ class DateTime:
 
 
 class Task:
-    """
-    Класс, представляющий одну семейную задачу.
-    Поля: дата выдачи, дедлайн, исполнитель, описание, статус.
-    """
     def __init__(self, date_issued: DateTime, deadline: DateTime,
                  executor: str, description: str, status: str):
         self.date_issued = date_issued
@@ -74,11 +50,6 @@ class Task:
 
 
 def create_base() -> list:
-    """
-    Создаёт демонстрационную базу из 30 задач.
-    Условное «сегодня»: 10 мая 2026 года.
-    Все даты задаются явно.
-    """
     tasks = []
     Y, M, D = 2026, 5, 10  # условное сегодня
 
@@ -140,10 +111,6 @@ def create_base() -> list:
 
 
 def save_to_file(filename: str, tasks: list):
-    """
-    Сохраняет список задач в текстовый файл.
-    Формат: issued_iso|deadline_iso|executor|description|status
-    """
     try:
         with open(filename, 'w', encoding='utf-8') as f:
             for task in tasks:
@@ -155,9 +122,6 @@ def save_to_file(filename: str, tasks: list):
 
 
 def load_from_file(filename: str) -> list:
-    """
-    Загружает список задач из файла. Обрабатывает ошибки формата.
-    """
     tasks = []
     try:
         with open(filename, 'r', encoding='utf-8') as f:
